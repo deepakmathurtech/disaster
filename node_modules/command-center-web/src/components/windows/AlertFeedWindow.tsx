@@ -9,7 +9,9 @@ interface AlertFeedWindowProps {
 
 export default function AlertFeedWindow({ events, onAskAIAboutAlert, onAcknowledge }: AlertFeedWindowProps) {
   const [filter, setFilter] = useState<'ALL' | 'CRITICAL' | 'HIGH' | 'MEDIUM'>('ALL');
-  const [ackMap, setAckMap] = useState<Record<string, boolean>>({});
+  const [ackMap, setAckMap] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(events.filter(event => event.acknowledged).map(event => [event.id, true]))
+  );
   const alertEndRef = React.useRef<HTMLDivElement>(null);
 
   const handleAck = (id: string) => {
@@ -25,6 +27,13 @@ export default function AlertFeedWindow({ events, onAskAIAboutAlert, onAcknowled
   React.useEffect(() => {
     alertEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [events.length]);
+
+  React.useEffect(() => {
+    setAckMap(previous => ({
+      ...previous,
+      ...Object.fromEntries(events.filter(event => event.acknowledged).map(event => [event.id, true])),
+    }));
+  }, [events]);
 
 
   return (

@@ -1,0 +1,70 @@
+{
+  "area": {
+    "id": "sector-4",
+    "name": "Sector 4",
+    "center": {
+      "lat": 12.9716,
+      "lng": 77.5946
+    },
+    "boundary_polygon": [
+      [12.9820, 77.5850],
+      [12.9840, 77.6080],
+      [12.9600, 77.6100],
+      [12.9580, 77.5880]
+    ]
+  },
+  "water_sources": [
+    {
+      "id": "water-01",
+      "name": "North River Basin",
+      "type": "RIVER",
+      "location": { "lat": 12.9750, "lng": 77.5920 },
+      "risk_radius_meters": 1100
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "road-b12",
+      "type": "BRIDGE",
+      "name": "Bridge B12 (Main Sector Access)",
+      "location": { "lat": 12.9716, "lng": 77.5946 },
+      "status": "OPEN",
+      "last_verified": "2026-08-12T11:09:02Z",
+      "confidence": 0.95
+    },
+    {
+      "id": "road-c05",
+      "type": "ROAD",
+      "name": "Coastal Road C05",
+      "location": { "lat": 12.9650, "lng": 77.5900 },
+      "status": "BLOCKED",
+      "last_verified": "2026-08-12T13:09:02Z",
+      "confidence": 0.90
+    },
+    {
+      "id": "shelter-alpha",
+      "type": "SHELTER",
+      "name": "Central High Shelter",
+      "location": { "lat": 12.9785, "lng": 77.5980 },
+      "status": "OPERATIONAL",
+      "last_verified": "2026-08-12T13:39:02Z",
+      "confidence": 0.98
+    }
+  ],
+  "incidents": [
+    {
+      "id": "inc-401",
+      "name": "Debris Blockage",
+      "severity": "HIGH",
+      "location": { "lat": 12.9650, "lng": 77.5900 }
+    }
+  ],
+  "field_units": [
+    {
+      "id": "unit-17",
+      "callsign": "Unit 17 Mobile Response",
+      "location": { "lat": 12.9730, "lng": 77.5950 },
+      "status": "ASSIGNED"
+    }
+  ]
+}

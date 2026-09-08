@@ -1,0 +1,9 @@
+
+> disaster-awareness-monorepo@1.0.0 dev:server
+> npm --prefix services/api-server run dev
+
+
+> api-server@1.0.0 dev
+> ts-node src/server.ts
+
+[API Server] Running on http://localhost:4000

@@ -1,0 +1,437 @@
+.eoc-v2-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* 1. Header */
+.eoc-v2-header {
+  height: 54px;
+  background: #070d19;
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  z-index: 1000;
+}
+
+.eoc-v2-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  font-size: 1.4rem;
+}
+
+.eoc-v2-brand h1 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 0.05em;
+  color: #f8fafc;
+}
+
+.eoc-v2-brand small {
+  color: #64748b;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.area-select-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.area-select-box select {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #38bdf8;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.eoc-v2-telemetry {
+  display: flex;
+  gap: 1.25rem;
+  background: #0f172a;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #1e293b;
+}
+
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.t-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.t-val {
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.text-success { color: #10b981; }
+.text-warning { color: #f59e0b; }
+.text-danger { color: #ef4444; }
+
+.eoc-v2-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-layer, .btn-mod {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-layer:hover, .btn-mod:hover {
+  border-color: #38bdf8;
+  color: #fff;
+}
+
+.btn-mod.active {
+  background: #0284c7;
+  color: #fff;
+  border-color: #38bdf8;
+}
+
+/* Layer Control Menu */
+.layer-controls-menu {
+  position: absolute;
+  top: 60px;
+  right: 180px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.75rem;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.lcm-header {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #64748b;
+  margin-bottom: 0.2rem;
+}
+
+.lcm-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.lcm-item input {
+  accent-color: #38bdf8;
+}
+
+/* Main Workspace */
+.eoc-v2-main {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.area-map-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.leaflet-area-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.eoc-hud-topleft {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 500;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid #334155;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.hud-stat code {
+  color: #38bdf8;
+}
+
+/* Custom Marker HTML */
+.eoc-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.eoc-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.eoc-marker-core {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.75rem;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.eoc-marker-label {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #334155;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+.eml-title {
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #f8fafc;
+}
+
+.eml-sub {
+  font-size: 0.6rem;
+  font-weight: 600;
+}
+
+.stale-ring .eoc-marker-core {
+  box-shadow: 0 0 15px #f59e0b;
+}
+
+/* Map Legend */
+.map-legend-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 800;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  overflow: hidden;
+}
+
+.legend-header {
+  padding: 0.5rem 0.75rem;
+  background: #090d16;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.legend-body {
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-green { background: #10b981; }
+.dot-red { background: #ef4444; }
+
+.ring {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid;
+}
+
+.ring-amber { border-color: #f59e0b; }
+.ring-red { border-color: #ef4444; }
+
+.zone-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.zone-blue { background: rgba(56, 189, 248, 0.3); border: 1px stroke #38bdf8; }
+
+/* Floating Window System */
+.floating-window {
+  position: absolute;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid #334155;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+}
+
+.fw-unc { top: 20px; right: 20px; width: 360px; max-height: 400px; }
+.fw-tasks { bottom: 60px; right: 20px; width: 340px; max-height: 320px; }
+.fw-ai { top: 20px; left: 20px; width: 360px; height: 380px; }
+.fw-inspect { top: 80px; right: 400px; width: 300px; }
+
+.fw-header {
+  background: #070d19;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.fw-actions button {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  margin-left: 0.4rem;
+  font-weight: bold;
+}
+
+.fw-body {
+  padding: 0.75rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.fw-card {
+  background: #090d16;
+  padding: 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.fc-title { font-weight: bold; font-size: 0.8rem; }
+.fc-reason { color: #94a3b8; margin: 0.2rem 0; }
+.fc-action { color: #f59e0b; font-weight: bold; font-size: 0.65rem; }
+
+.border-warning { border-left: 3px solid #f59e0b; }
+
+.fw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.fw-form input, .fw-form select {
+  background: #090d16;
+  border: 1px solid #334155;
+  color: #fff;
+  padding: 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.fw-form button {
+  background: #0284c7;
+  color: #fff;
+  border: none;
+  padding: 0.4rem;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.task-item {
+  background: #090d16;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.3rem;
+  font-size: 0.75rem;
+}
+
+.fw-chat { display: flex; flex-direction: column; }
+.chat-log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.4rem; }
+.chat-msg { padding: 0.4rem 0.6rem; border-radius: 4px; font-size: 0.75rem; white-space: pre-line; }
+.chat-msg.user { background: #0284c7; align-self: flex-end; }
+.chat-msg.ai { background: #1e293b; align-self: flex-start; }
+
+.chat-form { display: flex; gap: 0.4rem; }
+.chat-form input { flex: 1; background: #090d16; border: 1px solid #334155; color: #fff; padding: 0.4rem; border-radius: 4px; font-size: 0.75rem; }
+.chat-form button { background: #0284c7; color: #fff; border: none; padding: 0.4rem 0.7rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
+
+/* Dock Bar */
+.eoc-v2-dock {
+  height: 36px;
+  background: #070d19;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 0.5rem;
+  z-index: 1000;
+}
+
+.dock-btn {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dock-btn.active { color: #38bdf8; border-color: #38bdf8; }
+.dock-btn.minimized { opacity: 0.5; }

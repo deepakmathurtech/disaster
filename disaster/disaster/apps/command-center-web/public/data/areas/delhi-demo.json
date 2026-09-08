@@ -1,0 +1,61 @@
+{
+  "area": {
+    "id": "delhi-demo",
+    "name": "Delhi NCR",
+    "center": {
+      "lat": 28.6139,
+      "lng": 77.2090
+    },
+    "boundary_polygon": [
+      [28.6400, 77.1800],
+      [28.6450, 77.2400],
+      [28.5800, 77.2450],
+      [28.5750, 77.1850]
+    ]
+  },
+  "water_sources": [
+    {
+      "id": "water-yamuna",
+      "name": "Yamuna River Basin",
+      "type": "RIVER",
+      "location": { "lat": 28.6100, "lng": 77.2300 },
+      "risk_radius_meters": 1600
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "bridge-delhi-01",
+      "type": "BRIDGE",
+      "name": "Old Yamuna Bridge (Loha Pul)",
+      "location": { "lat": 28.6200, "lng": 77.2350 },
+      "status": "DAMAGED",
+      "last_verified": "2026-08-12T12:00:00Z",
+      "confidence": 0.92
+    },
+    {
+      "id": "road-ring-01",
+      "type": "ROAD",
+      "name": "Ring Road Outer Corridor",
+      "location": { "lat": 28.6050, "lng": 77.2100 },
+      "status": "OPEN",
+      "last_verified": "2026-08-12T13:00:00Z",
+      "confidence": 0.96
+    }
+  ],
+  "incidents": [
+    {
+      "id": "inc-delhi-1",
+      "name": "Yamuna Surge Overflow",
+      "severity": "CRITICAL",
+      "location": { "lat": 28.6150, "lng": 77.2320 }
+    }
+  ],
+  "field_units": [
+    {
+      "id": "unit-01",
+      "callsign": "Delhi EOC Unit 01",
+      "location": { "lat": 28.6139, "lng": 77.2090 },
+      "status": "ACTIVE"
+    }
+  ]
+}

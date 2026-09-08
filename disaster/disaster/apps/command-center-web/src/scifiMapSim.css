@@ -1,0 +1,43 @@
+.window-simulation {
+  top: 20px;
+  right: 420px;
+  width: 340px;
+}
+
+.sim-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sim-control-group input[type="range"] {
+  accent-color: #38bdf8;
+  cursor: pointer;
+}
+
+.sim-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.sim-stat-box {
+  background: #090d16;
+  border: 1px solid #334155;
+  padding: 0.6rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sim-stat-box small {
+  font-size: 0.65rem;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.sim-stat-box strong {
+  font-size: 1rem;
+  margin-top: 0.2rem;
+}

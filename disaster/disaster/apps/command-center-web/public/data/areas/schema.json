@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LocalAreaIntelligenceDataset",
+  "type": "object",
+  "required": ["area", "infrastructure", "water_sources", "incidents", "field_units"],
+  "properties": {
+    "area": {
+      "type": "object",
+      "required": ["id", "name", "center", "boundary_polygon"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "center": {
+          "type": "object",
+          "required": ["lat", "lng"],
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "boundary_polygon": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        }
+      }
+    },
+    "water_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "location", "risk_radius_meters"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "location": {
+            "type": "object",
+            "properties": { "lat": { "type": "number" }, "lng": { "type": "number" } }
+          },
+          "risk_radius_meters": { "type": "number" }
+        }
+      }
+    },
+    "infrastructure": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "name", "location", "status", "last_verified", "confidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "name": { "type": "string" },
+          "location": {
+            "type": "object",
+            "properties": { "lat": { "type": "number" }, "lng": { "type": "number" } }
+          },
+          "status": { "type": "string" },
+          "last_verified": { "type": "string" },
+          "confidence": { "type": "number" }
+        }
+      }
+    },
+    "incidents": { "type": "array" },
+    "field_units": { "type": "array" }
+  }
+}

@@ -8,27 +8,20 @@ interface GridWorkspaceProps {
 }
 
 export default function GridWorkspace({ entities, onSelectEntity, onRunAITriage }: GridWorkspaceProps) {
-  const [filter, setFilter] = useState<'ALL' | 'VERIFIED' | 'STALE' | 'CONFLICT' | 'BRIDGE' | 'ROAD' | 'EMBANKMENT' | 'SHELTER'>('ALL');
+  const [filter, setFilter] = useState<'ALL' | 'VERIFIED' | 'STALE' | 'CONFLICT' | 'BRIDGE' | 'ROAD' | 'SHELTER'>('ALL');
   const [search, setSearch] = useState('');
 
   const filtered = entities.filter(e => {
     if (filter === 'VERIFIED' && (e.is_stale || e.has_conflict)) return false;
     if (filter === 'STALE' && !e.is_stale) return false;
     if (filter === 'CONFLICT' && !e.has_conflict) return false;
-    const t = (e.type || '').toUpperCase();
-    if (filter === 'BRIDGE' && !t.includes('BRIDGE')) return false;
-    if (filter === 'ROAD' && !t.includes('ROAD') && !t.includes('HIGHWAY')) return false;
-    if (filter === 'EMBANKMENT' && !t.includes('EMBANK') && !t.includes('DRAIN')) return false;
-    if (filter === 'SHELTER' && !t.includes('SHELTER')) return false;
+    if (filter === 'BRIDGE' && e.type !== 'BRIDGE') return false;
+    if (filter === 'ROAD' && e.type !== 'ROAD') return false;
+    if (filter === 'SHELTER' && e.type !== 'SHELTER') return false;
 
     if (search) {
       const q = search.toLowerCase();
-      return (
-        e.name.toLowerCase().includes(q) ||
-        e.id.toLowerCase().includes(q) ||
-        e.current_state.toLowerCase().includes(q) ||
-        (e.location.address && e.location.address.toLowerCase().includes(q))
-      );
+      return e.name.toLowerCase().includes(q) || e.id.toLowerCase().includes(q) || e.current_state.toLowerCase().includes(q);
     }
     return true;
   });
@@ -41,11 +34,11 @@ export default function GridWorkspace({ entities, onSelectEntity, onRunAITriage 
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Filter entities by name, ID, location or status..."
+          placeholder="Filter entities by name, ID or status..."
           className="grid-search-input"
         />
         <div className="grid-filter-chips">
-          {(['ALL', 'VERIFIED', 'STALE', 'CONFLICT', 'BRIDGE', 'ROAD', 'EMBANKMENT', 'SHELTER'] as const).map(f => (
+          {(['ALL', 'VERIFIED', 'STALE', 'CONFLICT', 'BRIDGE', 'ROAD', 'SHELTER'] as const).map(f => (
             <button
               key={f}
               className={`chip ${filter === f ? 'active' : ''}`}
