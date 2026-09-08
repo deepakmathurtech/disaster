@@ -104,3 +104,72 @@ export interface SyncBatchResponse {
   conflicts_detected: ConflictRecord[];
   server_timestamp: string;
 }
+
+/* ── Route Finding System Protocol Contracts ────────────────────────── */
+
+export type TrafficLevel = 'low' | 'moderate' | 'heavy';
+export type SafetyCondition = 'safe' | 'cautious' | 'dangerous';
+export type RouteLengthCategory = 'short' | 'medium' | 'long';
+
+export interface RoadNode {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  type: 'INTERSECTION' | 'HOSPITAL' | 'SHELTER' | 'CHECKPOINT' | 'WAYPOINT';
+}
+
+export interface RoadEdge {
+  id: string;
+  source: string;
+  target: string;
+  roadName: string;
+  distanceKm: number;
+  baseSpeedKmh: number;
+  entityId?: string; // Associated operational entity (e.g. 'road-b12')
+  coordinates: LocationCoordinates[];
+}
+
+export interface RouteSegmentStatus {
+  edgeId: string;
+  roadName: string;
+  entityId?: string;
+  entityState?: OperationalStateValue;
+  penaltyMultiplier: number;
+}
+
+export interface RouteDetail {
+  routeId: number;
+  name: string;
+  distanceKm: number;
+  estimatedTimeMin: number;
+  traffic: TrafficLevel;
+  safety: SafetyCondition;
+  routeLengthClassification: RouteLengthCategory;
+  color: string;
+  pathNodeIds: string[];
+  coordinates: LocationCoordinates[];
+  segments: RouteSegmentStatus[];
+}
+
+export interface AIRouteInsight {
+  routeId: number;
+  summary: string;
+  advantages: string[];
+  disadvantages: string[];
+  potentialConcerns: string[];
+  preferableWhen: string;
+}
+
+export interface RouteSearchResponse {
+  sourceNode: RoadNode;
+  destNode: RoadNode;
+  routes: RouteDetail[];
+  aiAnalysis: {
+    overview: string;
+    insights: AIRouteInsight[];
+    generatedAt: string;
+  };
+  totalRoutesFound: number;
+  calculatedAt?: string;
+}

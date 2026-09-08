@@ -44,7 +44,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ userLocation, onBack, initia
     }
   }, [initialPrompt]);
 
-  const handleSendMessage = async (textToSend?: string, isVoice = false) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || inputText).trim();
     if (!query) return;
 
@@ -53,7 +53,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ userLocation, onBack, initia
     const userMsg: ChatMessage = {
       id: `usr-${Date.now()}`,
       sender: 'user',
-      text: isVoice ? `🎤 Voice note: "${query}"` : query,
+      text: query,
       timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
     };
 
@@ -76,8 +76,6 @@ export const ChatView: React.FC<ChatViewProps> = ({ userLocation, onBack, initia
       if (intentResult.intent !== 'UNKNOWN') {
         aiText = intentResult.response_text;
       } else {
-        // Try the shared Ollama engine once for open-ended citizen questions.
-        // Its rules fallback remains available when Ollama is not running.
         if (!localLLM.isReady()) {
           ollamaConnectionRef.current ??= localLLM.connect('ollama-auto').catch(() => undefined);
           await ollamaConnectionRef.current;
@@ -110,8 +108,29 @@ export const ChatView: React.FC<ChatViewProps> = ({ userLocation, onBack, initia
 
   const handleVoiceConfirm = (data: VoiceConfirmData) => {
     setIsVoiceRecording(false);
-    const transcript = data.text.trim() || 'Voice emergency situation report';
-    handleSendMessage(transcript, true);
+    const userVoiceMsg: ChatMessage = {
+      id: `usr-v-${Date.now()}`,
+      sender: 'user',
+      text: `🎤 Voice note (${data.durationSeconds}s): "${data.text}"`,
+      timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      isVoice: true,
+    };
+
+    setMessages((prev) => [...prev, userVoiceMsg]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      const intentResult = parseCitizenIntent('voice emergency situation report');
+      const aiMsg: ChatMessage = {
+        id: `ai-v-${Date.now()}`,
+        sender: 'ai',
+        text: "🎤 **Voice Note Received & Logged.**\n\nI have registered your audio report. Responders can review audio notes for situation assessment. Stay safe and monitor shelter route updates on the map.",
+        timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+        intentResult,
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+      setIsTyping(false);
+    }, 800);
   };
 
   const handleShareLocationInChat = () => {

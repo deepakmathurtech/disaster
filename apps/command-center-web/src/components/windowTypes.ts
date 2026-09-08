@@ -6,7 +6,8 @@ export type WindowId =
   | 'incident'
   | 'grid'
   | 'alertFeed'
-  | 'resourceBoard';
+  | 'resourceBoard'
+  | 'routeFinder';
 
 export interface WindowState {
   id: WindowId;
@@ -23,6 +24,19 @@ export interface WindowState {
 }
 
 export const DEFAULT_WINDOWS: Record<WindowId, WindowState> = {
+  routeFinder: {
+    id: 'routeFinder',
+    title: '🗺️ Intelligent Route Finding',
+    icon: '🗺️',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    x: 480,
+    y: 90,
+    width: 480,
+    height: 520,
+    zIndex: 2005,
+  },
   commandAI: {
     id: 'commandAI',
     title: '🤖 Command AI & Local LLM',

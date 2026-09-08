@@ -6,6 +6,7 @@
     "dev:server": "npm --prefix services/api-server run dev",
     "dev:command-center": "npm --prefix apps/command-center-web run dev",
     "dev:field-app": "npm --prefix apps/field-app run dev",
+    "dev:user-side": "npm --prefix apps/user_side run dev",
     "build": "npm run build --workspaces"
   },
   "workspaces": [

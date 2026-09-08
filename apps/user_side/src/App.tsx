@@ -26,7 +26,7 @@ export function App() {
         lng: coords.longitude,
         addressName: 'Current device location',
       })),
-      () => { /* Keep the last known fallback location when permission is unavailable. */ },
+      () => { /* Keep fallback location */ },
       { enableHighAccuracy: true, maximumAge: 15000, timeout: 10000 },
     );
     return () => navigator.geolocation.clearWatch(watchId);
