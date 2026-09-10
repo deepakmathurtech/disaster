@@ -25,10 +25,11 @@ class LocalLLMEngine {
   private classifier: any = null;
   private isInitializing: boolean = false;
   private isLoaded: boolean = false;
+  private hasFailed = false;
   private modelName: string = 'Xenova/LaMini-Flan-T5-77M'; // Lightweight fast local quantized model
 
   async init(onProgress?: (progress: number, text: string) => void): Promise<void> {
-    if (this.isLoaded || this.isInitializing) return;
+    if (this.isLoaded || this.isInitializing || this.hasFailed) return;
     this.isInitializing = true;
 
     try {
@@ -44,7 +45,9 @@ class LocalLLMEngine {
       this.isLoaded = true;
       if (onProgress) onProgress(100, 'Local LLM Ready (100% Offline Capable)');
     } catch (err) {
-      console.warn('Transformers.js model load fallback to local intent rule engine:', err);
+      this.hasFailed = true;
+      console.warn('Local model unavailable; using deterministic offline intent engine.', err);
+      if (onProgress) onProgress(100, 'Offline intent engine active (model unavailable)');
       this.isLoaded = false;
     } finally {
       this.isInitializing = false;

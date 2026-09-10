@@ -11,7 +11,9 @@ import MediaWindow from './components/windows/MediaWindow';
 import IncidentDetailWindow, { IncidentData } from './components/windows/IncidentDetailWindow';
 import AlertFeedWindow from './components/windows/AlertFeedWindow';
 import ResourceBoardWindow from './components/windows/ResourceBoardWindow';
+import RouteFinderWindow from './components/windows/RouteFinderWindow';
 import { SCRIPTED_TIMELINE, SimEvent } from './services/DisasterEngine';
+import { RouteDetail } from '@disaster/protocol';
 
 
 /* ── Type Definitions ─────────────────────────────────────────────── */
@@ -161,7 +163,7 @@ function AwarenessGauge({ fresh, stale, conflict }: { fresh: number; stale: numb
 export default function App() {
   const now = useClock();
 
-  const [selectedAreaId, setSelectedAreaId] = useState<'sector-4-demo' | 'delhi-demo'>('sector-4-demo');
+  const [selectedAreaId, setSelectedAreaId] = useState<'sector-4-demo' | 'delhi-demo' | 'assam-demo'>('sector-4-demo');
   const [areaData,    setAreaData]    = useState<AreaIntelligence | null>(null);
   const [entities,    setEntities]    = useState<Entity[]>([]);
   const [conflicts,   setConflicts]   = useState<Conflict[]>([]);
@@ -170,6 +172,10 @@ export default function App() {
   const [selIncident, setSelIncident] = useState<IncidentData | null>(null);
   const [activeTab,   setActiveTab]   = useState<'tactical' | 'uncertainty' | 'grid'>('tactical');
   const [apiOnline,   setApiOnline]   = useState(false);
+
+  // Emergency 5-Route Engine State
+  const [routes,          setRoutes]          = useState<RouteDetail[]>([]);
+  const [selectedRouteId, setSelectedRouteId] = useState<number | null>(1);
 
   const [layers, setLayers] = useState({
     infrastructure: true,
@@ -197,14 +203,42 @@ export default function App() {
 
   const fetchState = async () => {
     try {
-      const [s, u, t] = await Promise.all([
+      const [s, u, t, a] = await Promise.all([
         fetch(`${SERVER}/api/state`).then(r => r.json()),
         fetch(`${SERVER}/api/uncertainty`).then(r => r.json()),
         fetch(`${SERVER}/api/tasks`).then(r => r.json()),
+        fetch(`${SERVER}/api/alerts`).then(r => r.json()),
       ]);
       setEntities(s.entities   || []);
       setConflicts(u.conflicts || []);
       setTasks(t.tasks         || []);
+      const citizenAlerts: SimEvent[] = (a.alerts || []).map((alert: any) => ({
+        id: `citizen-${alert.id}`,
+        simTimeMinutes: 0,
+        title: alert.title,
+        severity: alert.severity === 'CRITICAL' ? 'CRITICAL' : alert.severity === 'MEDIUM' ? 'MEDIUM' : 'HIGH',
+        category: 'MEDICAL',
+        description: `${alert.description} (${alert.location?.address || `${alert.location?.lat}, ${alert.location?.lng}`})`,
+        affectedEntityId: alert.affectedEntityId,
+        suggestedAction: alert.suggestedAction,
+        acknowledged: alert.acknowledged,
+      }));
+      setCitizenIncidents((a.alerts || []).map((alert: any) => ({
+        id: alert.affectedEntityId || alert.id,
+        name: alert.title,
+        sev: String(alert.severity || 'HIGH').toLowerCase(),
+        sub: `${alert.description || 'Citizen report'} · ${alert.location?.address || 'Live location'}`,
+        time: fmtAge(alert.observedAt),
+        icon: alert.severity === 'CRITICAL' ? '🚨' : '⚠️',
+      })));
+      setActiveEvents(existing => {
+        const scriptedAlerts = existing.filter(event => !event.id.startsWith('citizen-'));
+        const existingCitizenIds = new Set(citizenAlerts.map(event => event.id));
+        return [
+          ...citizenAlerts,
+          ...scriptedAlerts.filter(event => !existingCitizenIds.has(event.id)),
+        ];
+      });
       setApiOnline(true);
     } catch { setApiOnline(false); }
   };
@@ -213,6 +247,7 @@ export default function App() {
   const [simRunning, setSimRunning] = useState<boolean>(true);
   const [simSeconds, setSimSeconds] = useState<number>(0);
   const [activeEvents, setActiveEvents] = useState<SimEvent[]>([]);
+  const [citizenIncidents, setCitizenIncidents] = useState<IncidentData[]>([]);
 
   // Simulation Clock: 1 real second = 1 sim minute
   useEffect(() => {
@@ -288,6 +323,7 @@ export default function App() {
   /* Derived */
   const staleList = entities.filter(e => e.is_stale);
   const freshList = entities.filter(e => !e.is_stale && !e.has_conflict);
+  const liveIncidents = [...citizenIncidents, ...DEMO_INCIDENTS];
 
   /* Window helpers */
   const toggleWindow = (id: WindowId) => {
@@ -351,7 +387,7 @@ export default function App() {
     openWindow('incident');
   };
 
-  const handleDispatch = async (ev?: React.FormEvent, customTitle?: string, customEntity?: string) => {
+  const handleDispatch = async (ev?: React.FormEvent, customTitle?: string, customEntity?: string, assignedUnitId = 'unit-17') => {
     if (ev) ev.preventDefault();
     const title = customTitle || taskTitle;
     const entity_id = customEntity || taskEntity;
@@ -361,7 +397,7 @@ export default function App() {
       await fetch(`${SERVER}/api/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, entity_id: entity_id || 'general', assigned_unit_id: 'unit-17', priority: 'HIGH' }),
+        body: JSON.stringify({ title, entity_id: entity_id || 'general', assigned_unit_id: assignedUnitId, priority: 'HIGH' }),
       });
       setTaskTitle(''); setTaskEntity('');
       fetchState();
@@ -373,7 +409,7 @@ export default function App() {
           title,
           description: 'Local dispatch task',
           entity_id: entity_id || 'general',
-          assigned_unit_id: 'Unit-17',
+          assigned_unit_id: assignedUnitId,
           priority: 'HIGH',
           status: 'OPEN',
           created_at: new Date().toISOString(),
@@ -381,6 +417,18 @@ export default function App() {
         ...prev,
       ]);
     }
+  };
+
+  const resolveConflict = async (conflict: Conflict) => {
+    const candidate = [...conflict.conflicting_deltas]
+      .sort((a, b) => new Date(b.observed_at).getTime() - new Date(a.observed_at).getTime())[0];
+    if (!candidate) return;
+    const response = await fetch(`${SERVER}/api/conflicts/${conflict.conflict_id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resolved_state: candidate.new_state, resolution_notes: 'Accepted latest observed report.' }),
+    });
+    if (response.ok) fetchState();
   };
 
   const toggleLayer = (k: keyof typeof layers) =>
@@ -411,6 +459,7 @@ export default function App() {
           >
             <option value="sector-4-demo">📍 Sector 4</option>
             <option value="delhi-demo">📍 Delhi NCR</option>
+            <option value="assam-demo">📍 Assam Flood Zone</option>
           </select>
         </div>
 
@@ -518,7 +567,7 @@ export default function App() {
         <div className="ps">
           <div className="ps-hdr">Area Intelligence</div>
           <div className="ps-body">
-            {(['sector-4-demo', 'delhi-demo'] as const).map(id => (
+            {(['sector-4-demo', 'delhi-demo', 'assam-demo'] as const).map(id => (
               <div
                 key={id}
                 className={`area-item ${selectedAreaId === id ? 'active' : ''}`}
@@ -526,8 +575,8 @@ export default function App() {
               >
                 <div className="area-dot" />
                 <div>
-                  <div className="area-name">{id === 'sector-4-demo' ? 'Sector 4' : 'Delhi NCR'}</div>
-                  <div className="area-sub">{id === 'sector-4-demo' ? 'Local demo dataset' : 'Regional dataset'}</div>
+                  <div className="area-name">{id === 'sector-4-demo' ? 'Sector 4' : id === 'delhi-demo' ? 'Delhi NCR' : 'Assam Flood Zone'}</div>
+                  <div className="area-sub">{id === 'sector-4-demo' ? 'Local demo dataset' : id === 'delhi-demo' ? 'Regional dataset' : 'Flood operations dataset'}</div>
                 </div>
               </div>
             ))}
@@ -631,6 +680,9 @@ export default function App() {
               areaData={areaData}
               entities={entities}
               conflicts={conflicts}
+              routes={routes}
+              selectedRouteId={selectedRouteId}
+              onSelectRoute={(id) => setSelectedRouteId(id)}
               activeLayers={{
                 ...layers,
                 uncertainty: activeTab === 'uncertainty' || layers.uncertainty,
@@ -688,7 +740,7 @@ export default function App() {
                 </div>
               ))}
               {conflicts.map(c => (
-                <div key={c.conflict_id} className="unc-card conflict" onClick={() => openWindow('commandAI')}>
+                <div key={c.conflict_id} className="unc-card conflict">
                   <div className="unc-card-hdr">
                     <span className="unc-name">{c.entity_name}</span>
                     <span className="unc-badge unc-badge-conflict">CONFLICT</span>
@@ -697,7 +749,10 @@ export default function App() {
                     <span className="unc-key">Reports</span>
                     <span className="unc-val unc-val-danger">{c.conflicting_deltas.length} conflicting</span>
                   </div>
-                  <div className="unc-action">→ Run AI Conflict Triage</div>
+                  <div className="unc-action" onClick={() => openWindow('commandAI')}>→ Run AI Conflict Triage</div>
+                  <button type="button" className="btn-alert-ack" onClick={() => resolveConflict(c)}>
+                    ACCEPT LATEST REPORT
+                  </button>
                 </div>
               ))}
             </div>
@@ -707,10 +762,10 @@ export default function App() {
           <div className="rps">
             <div className="rps-hdr">
               🚨 Active Incidents
-              <span className="rp-badge rp-badge-danger">{DEMO_INCIDENTS.length}</span>
+              <span className="rp-badge rp-badge-danger">{liveIncidents.length}</span>
             </div>
             <div className="rps-body">
-              {DEMO_INCIDENTS.map(inc => (
+              {liveIncidents.map(inc => (
                 <div key={inc.id} className={`inc-item inc-sev-${inc.sev}`} onClick={() => openIncident(inc)}>
                   <span className="inc-icon">{inc.icon}</span>
                   <div>
@@ -771,7 +826,7 @@ export default function App() {
 
       {/* ══ BOTTOM DOCK BAR (DYNAMIC WINDOW CONTROLLER) ══════════════ */}
       <footer className="eoc-dock">
-        {(['commandAI', 'inspector', 'comms', 'media', 'incident', 'grid'] as const).map(id => {
+        {(['routeFinder', 'commandAI', 'inspector', 'comms', 'media', 'incident', 'grid'] as const).map(id => {
           const w = windows[id];
           const isActive = w.isOpen && !w.isMinimized;
           return (
@@ -780,7 +835,8 @@ export default function App() {
               className={`dock-btn ${isActive ? 'active' : w.isOpen ? 'minimized' : ''}`}
               onClick={() => toggleWindow(id)}
             >
-              {w.icon} {w.title.replace(/^(🤖|🔎|📡|📷|🚨|📊)\s*/, '')}
+              {w.icon} {w.title.replace(/^(🤖|🔎|📡|📷|🚨|📊|🧭)\s*/, '')}
+              {id === 'routeFinder' && <span className="dock-badge">5</span>}
               {id === 'comms' && <span className="dock-badge">3</span>}
               {id === 'media' && <span className="dock-badge">LIVE</span>}
             </button>
@@ -815,7 +871,7 @@ export default function App() {
           conflictCount={conflicts.length}
           staleEntities={staleList.map(e => ({ name: e.name, current_state: e.current_state, ageStr: fmtAge(e.last_observed_at) }))}
           conflicts={conflicts.map(c => ({ entity_name: c.entity_name, count: c.conflicting_deltas.length }))}
-          incidents={DEMO_INCIDENTS}
+          incidents={liveIncidents}
         />
       </WindowManager>
 
@@ -831,7 +887,34 @@ export default function App() {
           onAskAIAboutAlert={(alert) => {
             openWindow('commandAI');
           }}
-          onAcknowledge={(id) => {}}
+          onAcknowledge={async (id) => {
+            if (!id.startsWith('citizen-')) return;
+            await fetch(`${SERVER}/api/alerts/${id.slice('citizen-'.length)}/acknowledge`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ acknowledged_by: 'command-center' }),
+            });
+          }}
+        />
+      </WindowManager>
+
+      {/* 1d. Emergency Route Finder Window */}
+      <WindowManager
+        win={windows.routeFinder}
+        onUpdate={updateWindow}
+        onClose={() => closeWindow('routeFinder')}
+        onFocus={() => focusWindow('routeFinder')}
+      >
+        <RouteFinderWindow
+          serverUrl={SERVER}
+          areaId={selectedAreaId}
+          onRoutesCalculated={(rList, firstId) => {
+            setRoutes(rList);
+            if (firstId !== null) setSelectedRouteId(firstId);
+          }}
+          selectedRouteId={selectedRouteId}
+          onSelectRoute={(id) => setSelectedRouteId(id)}
+          onDispatchTask={(title, entityId) => handleDispatch(undefined, title, entityId)}
         />
       </WindowManager>
 
@@ -843,7 +926,7 @@ export default function App() {
         onFocus={() => focusWindow('resourceBoard')}
       >
         <ResourceBoardWindow
-          onDispatchUnit={(unitId, taskTitle) => handleDispatch(undefined, taskTitle, unitId)}
+          onDispatchUnit={(unitId, taskTitle) => handleDispatch(undefined, taskTitle, 'general', unitId)}
         />
       </WindowManager>
 
