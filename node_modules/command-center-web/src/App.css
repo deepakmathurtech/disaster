@@ -1907,6 +1907,23 @@ input::placeholder { color: var(--text-lo); }
   z-index: 9999;
 }
 
+/* ── Command center refinement ── */
+.eoc-root { background: radial-gradient(circle at 50% -20%, rgba(0, 229, 255, 0.08), transparent 34%), #050d1a; }
+.eoc-header { box-shadow: 0 8px 26px rgba(0, 0, 0, 0.24); }
+.eoc-left, .eoc-right { background: rgba(6, 16, 31, 0.82); }
+.eoc-panel, .intel-panel, .side-panel { box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--cyan, #00e5ff); outline-offset: 2px; }
+@media (max-width: 1050px) {
+  .eoc-right { display: none; }
+  .eoc-main-workspace { grid-template-columns: 280px minmax(0, 1fr) !important; }
+}
+@media (max-width: 760px) {
+  .eoc-left { display: none; }
+  .eoc-main-workspace { display: block !important; }
+  .eoc-header { min-height: 58px; }
+  .floating-window { max-width: calc(100vw - 24px); }
+}
+
 
 
 

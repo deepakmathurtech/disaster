@@ -16,6 +16,7 @@ export interface SimEvent {
     text: string;
     type: 'SOS' | 'FIELD' | 'COMMAND';
   };
+  acknowledged?: boolean;
 }
 
 export interface SimState {

@@ -1,0 +1,364 @@
+{
+  "area": {
+    "id": "assam-demo",
+    "name": "Assam Flood Operations Zone",
+    "center": {
+      "lat": 26.7000,
+      "lng": 93.5000
+    },
+    "boundary_polygon": [
+      [27.9800, 94.4000],
+      [27.8500, 95.9500],
+      [26.7000, 95.6000],
+      [26.2000, 94.3000],
+      [24.5000, 93.2000],
+      [24.5000, 92.1000],
+      [25.7000, 90.8000],
+      [26.4000, 89.9000],
+      [27.1000, 91.8000],
+      [27.5000, 93.5000]
+    ]
+  },
+
+  "water_sources": [
+    {
+      "id": "water-brahmaputra",
+      "name": "Brahmaputra River",
+      "type": "RIVER",
+      "location": {
+        "lat": 26.1827,
+        "lng": 91.7450
+      },
+      "risk_radius_meters": 3500
+    },
+    {
+      "id": "water-dhansiri",
+      "name": "Dhansiri River",
+      "type": "RIVER",
+      "location": {
+        "lat": 26.4700,
+        "lng": 93.9500
+      },
+      "risk_radius_meters": 2800
+    },
+    {
+      "id": "water-kushiyara",
+      "name": "Kushiyara River",
+      "type": "RIVER",
+      "location": {
+        "lat": 24.9000,
+        "lng": 92.4500
+      },
+      "risk_radius_meters": 2500
+    }
+  ],
+
+  "infrastructure": [
+    {
+      "id": "bridge-assam-01",
+      "type": "BRIDGE",
+      "name": "Kemi River Iron Bridge (300m)",
+      "district": "Dhemaji",
+      "location": {
+        "lat": 27.75,
+        "lng": 95.15,
+        "address": "Near Jonai Sadar, Kemi–Purana Jelom, Dhemaji"
+      },
+      "status": "Collapsed/Washed Away",
+      "last_verified": "2026-08-21T10:15:00Z",
+      "confidence": 0.95
+    },
+    {
+      "id": "rail-assam-02",
+      "type": "RAIL_BRIDGE",
+      "name": "Dhemaji Railway Bridge",
+      "district": "Dhemaji",
+      "location": {
+        "lat": 27.48,
+        "lng": 94.57,
+        "address": "Dhemaji Railway Corridor"
+      },
+      "status": "Partially Collapsed",
+      "last_verified": "2026-08-21T11:00:00Z",
+      "confidence": 0.90
+    },
+    {
+      "id": "road-assam-03",
+      "type": "ROAD",
+      "name": "Nazira–Geleky Road",
+      "district": "Sivasagar",
+      "location": {
+        "lat": 26.97,
+        "lng": 94.68,
+        "address": "Between Sivasagar & Nazira"
+      },
+      "status": "Washed Away / Blocked",
+      "last_verified": "2026-08-21T09:45:00Z",
+      "confidence": 0.92
+    },
+    {
+      "id": "embank-assam-04",
+      "type": "EMBANKMENT",
+      "name": "Jhanji River Embankment",
+      "district": "Sivasagar",
+      "location": {
+        "lat": 26.90,
+        "lng": 94.75,
+        "address": "Chikirichuk, Nora-Kowar Bailung village"
+      },
+      "status": "Breached (50+ houses flooded)",
+      "last_verified": "2026-08-21T12:30:00Z",
+      "confidence": 0.98
+    },
+    {
+      "id": "bridge-assam-05",
+      "type": "BRIDGE",
+      "name": "Cholapothar Steel Bridge",
+      "district": "Charaideo",
+      "location": {
+        "lat": 26.92,
+        "lng": 95.02,
+        "address": "Cholapothar Corridor"
+      },
+      "status": "Damaged",
+      "last_verified": "2026-08-21T08:20:00Z",
+      "confidence": 0.88
+    },
+    {
+      "id": "footbridge-assam-06",
+      "type": "FOOTBRIDGE",
+      "name": "Tangla Footbridge",
+      "district": "Udalguri",
+      "location": {
+        "lat": 26.98,
+        "lng": 92.03,
+        "address": "Tangla Village"
+      },
+      "status": "Washed Away",
+      "last_verified": "2026-08-21T07:15:00Z",
+      "confidence": 0.94
+    },
+    {
+      "id": "embank-assam-07",
+      "type": "EMBANKMENT",
+      "name": "Brahmajan Embankment (5 Breaches)",
+      "district": "Biswanath",
+      "location": {
+        "lat": 26.73,
+        "lng": 93.15,
+        "address": "Brahmajan Riverside"
+      },
+      "status": "Breached",
+      "last_verified": "2026-08-21T10:00:00Z",
+      "confidence": 0.96
+    },
+    {
+      "id": "embank-assam-08",
+      "type": "EMBANKMENT",
+      "name": "Mangaldoi Embankment (2 Breaches)",
+      "district": "Darrang",
+      "location": {
+        "lat": 26.43,
+        "lng": 92.03,
+        "address": "Mangaldoi Sector"
+      },
+      "status": "Breached",
+      "last_verified": "2026-08-21T11:45:00Z",
+      "confidence": 0.93
+    },
+    {
+      "id": "highway-assam-09",
+      "type": "HIGHWAY",
+      "name": "National Highway near Teok",
+      "district": "Jorhat",
+      "location": {
+        "lat": 26.80,
+        "lng": 94.35,
+        "address": "NH Corridor near Teok"
+      },
+      "status": "Inundated / Water Flowing",
+      "last_verified": "2026-08-21T12:00:00Z",
+      "confidence": 0.91
+    },
+    {
+      "id": "drain-assam-10",
+      "type": "DRAINAGE",
+      "name": "Guwahati Urban Drainage (Satgaon/Hatigaon)",
+      "district": "Kamrup Metropolitan",
+      "location": {
+        "lat": 26.14,
+        "lng": 91.74,
+        "address": "Guwahati City Sector"
+      },
+      "status": "Flooded / Evacuations Active",
+      "last_verified": "2026-08-21T13:10:00Z",
+      "confidence": 0.97
+    },
+    {
+      "id": "gauge-assam-11",
+      "type": "RIVER_GAUGE",
+      "name": "Dhansiri River Danger Point",
+      "district": "Golaghat",
+      "location": {
+        "lat": 26.65,
+        "lng": 93.72,
+        "address": "Numaligarh River Gauge"
+      },
+      "status": "Above Danger Mark",
+      "last_verified": "2026-08-21T14:00:00Z",
+      "confidence": 0.99
+    },
+    {
+      "id": "urban-assam-12",
+      "type": "URBAN_AREA",
+      "name": "Sivasagar Town + University Quarters",
+      "district": "Sivasagar",
+      "location": {
+        "lat": 26.99,
+        "lng": 94.64,
+        "address": "Sivasagar Town & Sunderpur"
+      },
+      "status": "Submerged",
+      "last_verified": "2026-08-21T13:40:00Z",
+      "confidence": 0.95
+    },
+    {
+      "id": "bridge-assam-13",
+      "type": "BRIDGE",
+      "name": "Udalguri Road Bridge",
+      "district": "Udalguri",
+      "location": {
+        "lat": 26.77,
+        "lng": 92.10,
+        "address": "Kathpuri Village Area"
+      },
+      "status": "Washed Away",
+      "last_verified": "2026-08-21T09:10:00Z",
+      "confidence": 0.94
+    }
+  ],
+
+  "incidents": [
+    {
+      "id": "inc-assam-1",
+      "name": "Brahmaputra Flood Surge",
+      "severity": "CRITICAL",
+      "location": {
+        "lat": 26.1650,
+        "lng": 91.7450
+      }
+    },
+    {
+      "id": "inc-assam-2",
+      "name": "Dhemaji Inundation Breach",
+      "severity": "HIGH",
+      "location": {
+        "lat": 27.4800,
+        "lng": 94.5700
+      }
+    }
+  ],
+
+  "field_units": [
+    {
+      "id": "unit-assam-01",
+      "callsign": "Guwahati EOC Unit 01",
+      "location": {
+        "lat": 26.1445,
+        "lng": 91.7362
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "id": "unit-assam-02",
+      "callsign": "Dhemaji Rescue Unit 02",
+      "location": {
+        "lat": 27.5000,
+        "lng": 94.6000
+      },
+      "status": "ASSIGNED"
+    },
+    {
+      "id": "unit-assam-03",
+      "callsign": "Sivasagar Quick Response 03",
+      "location": {
+        "lat": 26.9800,
+        "lng": 94.6500
+      },
+      "status": "ACTIVE"
+    }
+  ],
+
+  "red_alert_zones": [
+    {
+      "id": "ra-nagaon",
+      "name": "Nagaon Flood Inundation Zone",
+      "district": "Nagaon",
+      "severity": "RED_ALERT",
+      "location": {
+        "lat": 26.3452,
+        "lng": 92.6840
+      },
+      "radius_meters": 6500,
+      "impact_description": "Severe Brahmaputra backflow flood. 70+ villages submerged, critical transit cut off.",
+      "affected_population": "145,000+",
+      "evacuation_status": "Mandatory Tier-1 Evacuation Active"
+    },
+    {
+      "id": "ra-golaghat",
+      "name": "Golaghat High-Risk Surge Zone",
+      "district": "Golaghat",
+      "severity": "RED_ALERT",
+      "location": {
+        "lat": 26.5167,
+        "lng": 93.9667
+      },
+      "radius_meters": 6000,
+      "impact_description": "Dhansiri river water flowing 1.8m above danger mark. Major highways inundated.",
+      "affected_population": "98,000+",
+      "evacuation_status": "Active Riverbank Evacuations"
+    },
+    {
+      "id": "ra-sivasagar",
+      "name": "Sivasagar Submerged Urban & Rural Zone",
+      "district": "Sivasagar",
+      "severity": "RED_ALERT",
+      "location": {
+        "lat": 26.9850,
+        "lng": 94.6300
+      },
+      "radius_meters": 5500,
+      "impact_description": "Multiple embankment breaches on Jhanji & Dikhow rivers. Town core waterlogged.",
+      "affected_population": "120,000+",
+      "evacuation_status": "Boat Rescues Deployed"
+    },
+    {
+      "id": "ra-jorhat",
+      "name": "Jorhat / Teok Inundation Belt",
+      "district": "Jorhat",
+      "severity": "RED_ALERT",
+      "location": {
+        "lat": 26.7509,
+        "lng": 94.2037
+      },
+      "radius_meters": 5800,
+      "impact_description": "National highway corridor flooded. Heavy crop & critical infrastructure damage.",
+      "affected_population": "85,000+",
+      "evacuation_status": "Relief Camps Activated"
+    },
+    {
+      "id": "ra-hojai",
+      "name": "Hojai Flash Flood Danger Zone",
+      "district": "Hojai",
+      "severity": "RED_ALERT",
+      "location": {
+        "lat": 26.0000,
+        "lng": 92.8600
+      },
+      "radius_meters": 5200,
+      "impact_description": "Kopili river torrential surge. Low-lying habitations cut off from power grid.",
+      "affected_population": "62,000+",
+      "evacuation_status": "Evacuation in Progress"
+    }
+  ]
+}

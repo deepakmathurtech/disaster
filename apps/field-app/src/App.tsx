@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { localLLMEngine } from './realLocalLLM';
 import type { RealLLMResult } from './realLocalLLM';
-import { Plus, Mic, ArrowUp, X, Paperclip } from 'lucide-react';
+import {
+  ArrowRight, ArrowUp, FileText, HandHelping, HelpCircle, House, LifeBuoy, Map,
+  MapPinned, MessageCircle, Mic, Package, Paperclip, Plus, Radio, Route, Settings,
+  ShieldCheck, Siren, TriangleAlert, Wifi, WifiOff, X,
+} from 'lucide-react';
 import { VoiceWaveformInput } from './VoiceWaveformInput';
 
 interface SyncItem {
@@ -63,7 +67,7 @@ export default function App({ onVoiceInput }: AppProps = {}) {
   const [pendingIntent, setPendingIntent] = useState<RealLLMResult | null>(null);
   const [evidenceEnabled, setEvidenceEnabled] = useState(false);
   const [syncing, setSyncing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'CHAT' | 'QUEUE' | 'DEBUG'>('CHAT');
+  const [activeTab, setActiveTab] = useState<'HOME' | 'CHAT' | 'QUEUE' | 'DEBUG'>('HOME');
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -308,45 +312,78 @@ export default function App({ onVoiceInput }: AppProps = {}) {
 
   const pendingCount = queue.filter((i) => i.sync_status === 'PENDING').length;
 
+  const openWorkflow = (prompt: string) => {
+    setActiveTab('CHAT');
+    setInput(prompt);
+  };
+
+  const navigateTo = (destination: 'HOME' | 'CHAT' | 'QUEUE' | 'DEBUG') => {
+    setActiveTab(destination);
+  };
+
   return (
     <div className="field-root">
       <header className="field-header">
         <div className="unit-badge">
-          <span className="unit-icon">📱</span>
+          <span className="unit-icon"><ShieldCheck size={24} /></span>
           <div>
             <div className="unit-name">FIELD RESPONDER UNIT-17</div>
-            <div className="unit-sub">Local AI & Offline Durable State Engine</div>
+            <div className="unit-sub">Disaster Response &amp; Field Operations</div>
           </div>
         </div>
 
         <div className="field-header-right">
+          <span className="location-pill"><MapPinned size={14} /> Sector 4 South Access Point</span>
           <span className={`connectivity-pill ${isOnline ? 'pill-online' : 'pill-offline'}`}>
-            {isOnline ? '🟢 ONLINE' : '🔴 OFFLINE'}
+            {isOnline ? <><Wifi size={13} /> ON DUTY / ACTIVE OPERATIONS</> : <><WifiOff size={13} /> OFFLINE MODE</>}
           </span>
-          <button className={`toggle-btn ${isOnline ? 'toggle-disconnect' : 'toggle-connect'}`} onClick={() => setIsOnline(!isOnline)}>
-            {isOnline ? 'Disable Internet (Offline Test)' : 'Restore Internet'}
-          </button>
+          <div className="operations-card"><Radio size={17} /><div><strong>ON DUTY</strong><span>UNIT-17 Field Operations</span></div><button className="connection-toggle" onClick={() => setIsOnline(!isOnline)} title={isOnline ? 'Disable internet for offline test' : 'Restore internet'} aria-label={isOnline ? 'Disable internet for offline test' : 'Restore internet'}>{isOnline ? <WifiOff size={14} /> : <Wifi size={14} />}</button></div>
         </div>
       </header>
 
-      {/* Model Loader Banner */}
-      <div className="llm-status-banner">
-        <div className="llm-status-info">
-          <span>🧠 Local LLM Engine: <strong>{llmStatus}</strong></span>
-          <span className="llm-badge">{isRealLLMActive ? '100% OFFLINE ACTIVE' : 'WASM INITIALIZING'}</span>
-        </div>
-        {llmProgress < 100 && (
-          <div className="progress-bar-track">
-            <div className="progress-bar-fill" style={{ width: `${llmProgress}%` }} />
-          </div>
-        )}
-      </div>
+      <div className="field-layout">
+        <aside className="side-nav" aria-label="Primary navigation">
+          <div className="nav-label">FIELD CONSOLE</div>
+          <button className={`side-nav-item side-nav-sos ${activeTab === 'HOME' ? 'nav-active' : ''}`} onClick={() => navigateTo('HOME')}><Siren size={19} /><span>SOS</span></button>
+          <button className="side-nav-item" onClick={() => openWorkflow('Navigate safely: find a safe route and identify nearby risk areas.') }><Map size={19} /><span>Map</span></button>
+          <button className={`side-nav-item ${activeTab === 'CHAT' ? 'nav-active' : ''}`} onClick={() => navigateTo('CHAT')}><MessageCircle size={19} /><span>Chat</span></button>
+          <button className={`side-nav-item ${activeTab === 'QUEUE' ? 'nav-active' : ''}`} onClick={() => navigateTo('QUEUE')}><FileText size={19} /><span>Reports</span>{pendingCount > 0 && <b>{pendingCount}</b>}</button>
+          <button className={`side-nav-item ${activeTab === 'DEBUG' ? 'nav-active' : ''}`} onClick={() => navigateTo('DEBUG')}><HelpCircle size={19} /><span>Help</span></button>
+          <div className="sidebar-footer"><div className="sidebar-status-dot" /><span>{isOnline ? 'Connected' : 'Offline ready'}</span></div>
+        </aside>
 
-      <div className="tab-bar">
-        <button className={`tab-btn ${activeTab === 'CHAT' ? 'tab-active' : ''}`} onClick={() => setActiveTab('CHAT')}>💬 Local Assistant</button>
-        <button className={`tab-btn ${activeTab === 'QUEUE' ? 'tab-active' : ''}`} onClick={() => setActiveTab('QUEUE')}>📥 Sync Queue ({pendingCount})</button>
-        <button className={`tab-btn ${activeTab === 'DEBUG' ? 'tab-active' : ''}`} onClick={() => setActiveTab('DEBUG')}>⚙ Engine Telemetry</button>
-      </div>
+        <section className="field-workspace">
+          <div className="workspace-topline">
+            <div><span className="eyebrow">OPERATIONAL OVERVIEW</span><h1>{activeTab === 'HOME' ? 'Field response dashboard' : activeTab === 'CHAT' ? 'Local AI Assistant' : activeTab === 'QUEUE' ? 'Reports & sync queue' : 'Help & system status'}</h1></div>
+            <div className="engine-indicator"><span className="engine-dot" /> Local AI {isRealLLMActive ? 'active' : 'initializing'}</div>
+          </div>
+
+          {activeTab === 'HOME' && (
+            <div className="home-dashboard">
+              <section className="hero-card">
+                <div className="hero-copy"><span className="duty-badge"><span /> UNIT-17 | ON DUTY</span><h2>Need Help?</h2><p>Your safety is our priority. Report an emergency or request operational support from your field command center.</p><button className="hero-link" onClick={() => openWorkflow('I need immediate assistance. Please assess this distress situation.')}>Open assistant <ArrowRight size={16} /></button></div>
+                <div className="hero-art" aria-hidden="true"><div className="art-ring ring-one" /><div className="art-ring ring-two" /><ShieldCheck size={106} strokeWidth={1.2} /></div>
+              </section>
+
+              <button className="sos-card" onClick={() => openWorkflow('SOS DISTRESS SIGNAL: I need immediate emergency assistance. Assess and escalate this situation.') }>
+                <span className="sos-icon"><Siren size={31} /></span><span className="sos-copy"><strong>SEND SOS DISTRESS SIGNAL</strong><small>Immediate help for life-threatening situations</small></span><span className="circle-arrow"><ArrowRight size={21} /></span>
+              </button>
+
+              <div className="action-grid">
+                <button className="action-card action-supplies" onClick={() => openWorkflow('Request supplies: I need food, water, medical or other essential supplies.') }><span className="action-icon"><Package size={24} /></span><span className="action-content"><strong>Request Supplies</strong><small>Food, water, medical &amp; other essential supplies</small></span><span className="small-arrow"><ArrowRight size={17} /></span></button>
+                <button className="action-card action-report" onClick={() => openWorkflow('Report situation: describe the fire, damage, hazard or incident I observed.') }><span className="action-icon"><TriangleAlert size={24} /></span><span className="action-content"><strong>Report Situation</strong><small>Fire, damage, hazard or other incidents</small></span><span className="small-arrow"><ArrowRight size={17} /></span></button>
+                <button className="action-card action-help" onClick={() => openWorkflow('Request help: I need medical, rescue, transport or additional support.') }><span className="action-icon"><HandHelping size={24} /></span><span className="action-content"><strong>Request Help</strong><small>Medical, rescue, transport or additional support</small></span><span className="small-arrow"><ArrowRight size={17} /></span></button>
+                <button className="action-card action-route" onClick={() => openWorkflow('Navigate safely: find a safe route and identify nearby risk areas.') }><span className="action-icon"><Route size={24} /></span><span className="action-content"><strong>Navigate Safely</strong><small>Get safe routes and avoid risk areas</small></span><span className="small-arrow"><ArrowRight size={17} /></span></button>
+              </div>
+
+              <div className="home-footer-strip"><div><span className="strip-label">SYSTEM STATUS</span><strong>{isOnline ? 'All field systems operational' : 'Offline mode enabled'}</strong></div><div><span className="strip-label">PENDING REPORTS</span><strong>{pendingCount} awaiting sync</strong></div><button onClick={() => navigateTo('QUEUE')}>View reports <ArrowRight size={15} /></button></div>
+            </div>
+          )}
+
+          {activeTab !== 'HOME' && (
+            <div className="operational-panel">
+              <div className="llm-status-banner"><div className="llm-status-info"><span><Settings size={15} /> Local LLM Engine: <strong>{llmStatus}</strong></span><span className="llm-badge">{isRealLLMActive ? '100% OFFLINE ACTIVE' : 'WASM INITIALIZING'}</span></div>{llmProgress < 100 && <div className="progress-bar-track"><div className="progress-bar-fill" style={{ width: `${llmProgress}%` }} /></div>}</div>
+              <div className="tab-bar"><button className={`tab-btn ${activeTab === 'CHAT' ? 'tab-active' : ''}`} onClick={() => setActiveTab('CHAT')}>💬 Local Assistant</button><button className={`tab-btn ${activeTab === 'QUEUE' ? 'tab-active' : ''}`} onClick={() => setActiveTab('QUEUE')}>📥 Sync Queue ({pendingCount})</button><button className={`tab-btn ${activeTab === 'DEBUG' ? 'tab-active' : ''}`} onClick={() => setActiveTab('DEBUG')}>⚙ Engine Telemetry</button></div>
 
       <main className="field-main">
         {activeTab === 'CHAT' && (
@@ -500,6 +537,17 @@ export default function App({ onVoiceInput }: AppProps = {}) {
           </div>
         )}
       </main>
+            </div>
+          )}
+        </section>
+      </div>
+      <nav className="bottom-nav" aria-label="Mobile navigation">
+        <button className={activeTab === 'HOME' ? 'bottom-active' : ''} onClick={() => navigateTo('HOME')}><House size={19} /><span>Home</span></button>
+        <button onClick={() => openWorkflow('Navigate safely: find a safe route and identify nearby risk areas.') }><Map size={19} /><span>Map</span></button>
+        <button className={activeTab === 'CHAT' ? 'bottom-active' : ''} onClick={() => navigateTo('CHAT')}><MessageCircle size={19} /><span>Chat</span></button>
+        <button className={activeTab === 'QUEUE' ? 'bottom-active' : ''} onClick={() => navigateTo('QUEUE')}><FileText size={19} /><span>Reports</span></button>
+        <button className={activeTab === 'DEBUG' ? 'bottom-active' : ''} onClick={() => navigateTo('DEBUG')}><LifeBuoy size={19} /><span>Help</span></button>
+      </nav>
     </div>
   );
 }
