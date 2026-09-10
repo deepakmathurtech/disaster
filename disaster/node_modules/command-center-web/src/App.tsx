@@ -26,6 +26,12 @@ export interface AreaIntelligence {
     id: string; name: string; type: string;
     location: { lat: number; lng: number };
     risk_radius_meters: number;
+    path_coordinates?: Array<[number, number]>;
+    flood_zones?: Array<{
+      name: string;
+      location: { lat: number; lng: number };
+      radius_meters: number;
+    }>;
   }>;
   infrastructure: Array<{
     id: string; type: string; name: string;
@@ -52,6 +58,15 @@ export interface AreaIntelligence {
     impact_description: string;
     affected_population?: string;
     evacuation_status?: string;
+  }>;
+  no_contact_zones?: Array<{
+    id: string;
+    name: string;
+    district?: string;
+    location: { lat: number; lng: number };
+    radius_meters?: number;
+    description?: string;
+    is_close_to_flood?: boolean;
   }>;
 }
 
@@ -97,10 +112,11 @@ export interface TaskRecord {
 const SERVER = 'http://localhost:4000';
 
 const LAYER_META = [
-  { key: 'red_alert'      as const, icon: '🛑', label: 'Red Alert'      },
-  { key: 'infrastructure' as const, icon: '🏗', label: 'Infrastructure' },
+  { key: 'no_contact'     as const, icon: '📵', label: 'No Contact'     },
   { key: 'water_sources'  as const, icon: '💧', label: 'Water Sources'  },
   { key: 'flood_exposure' as const, icon: '🌊', label: 'Flood Exposure'  },
+  { key: 'red_alert'      as const, icon: '🛑', label: 'Red Alert'      },
+  { key: 'infrastructure' as const, icon: '🏗', label: 'Infrastructure' },
   { key: 'incidents'      as const, icon: '🚨', label: 'Incidents'       },
   { key: 'field_units'    as const, icon: '📱', label: 'Field Units'     },
   { key: 'uncertainty'    as const, icon: '⚠',  label: 'Uncertainty'     },
@@ -174,7 +190,7 @@ function AwarenessGauge({ fresh, stale, conflict }: { fresh: number; stale: numb
 export default function App() {
   const now = useClock();
 
-  const [selectedAreaId, setSelectedAreaId] = useState<'sector-4-demo' | 'assam-demo' | 'delhi-demo'>('sector-4-demo');
+  const [selectedAreaId, setSelectedAreaId] = useState<'sector-4-demo' | 'assam-demo' | 'delhi-demo'>('assam-demo');
   const [areaData,    setAreaData]    = useState<AreaIntelligence | null>(null);
   const [entities,    setEntities]    = useState<Entity[]>([]);
   const [conflicts,   setConflicts]   = useState<Conflict[]>([]);
@@ -185,13 +201,14 @@ export default function App() {
   const [apiOnline,   setApiOnline]   = useState(false);
 
   const [layers, setLayers] = useState({
-    red_alert:      true,
-    infrastructure: true,
-    water_sources:  true,
-    flood_exposure: true,
-    incidents:      true,
-    field_units:    true,
-    uncertainty:    true,
+    no_contact:     true,
+    red_alert:      false,
+    infrastructure: false,
+    water_sources:  false,
+    flood_exposure: false,
+    incidents:      false,
+    field_units:    false,
+    uncertainty:    false,
   });
 
   // Windows State Management
@@ -566,7 +583,7 @@ export default function App() {
         <div className="ps">
           <div className="ps-hdr">Area Intelligence</div>
           <div className="ps-body">
-            {(['sector-4-demo','assam-demo','delhi-demo'] as const).map(id => (
+            {(['assam-demo','sector-4-demo','delhi-demo'] as const).map(id => (
               <div
                 key={id}
                 className={`area-item ${selectedAreaId === id ? 'active' : ''}`}
@@ -609,6 +626,10 @@ export default function App() {
             {areaData && (
               <div style={{ marginTop: 16 }}>
                 <div className="ps-hdr" style={{ padding: '0 0 6px' }}>Area Stats</div>
+                <div className="stat-row">
+                  <span className="stat-lbl">No Contact Zones</span>
+                  <span className="stat-val" style={{ color: '#eab308', fontWeight: 800 }}>{areaData.no_contact_zones?.length ?? (areaData.area.id === 'assam-demo' ? 5 : 0)}</span>
+                </div>
                 <div className="stat-row">
                   <span className="stat-lbl">Red Alert Zones</span>
                   <span className="stat-val" style={{ color: '#ef4444', fontWeight: 800 }}>{areaData.red_alert_zones?.length ?? (areaData.area.id === 'assam-demo' ? 5 : 0)}</span>
@@ -695,6 +716,10 @@ export default function App() {
 
         {/* Legend */}
         <div className="map-legend">
+          <div className="leg-item"><div className="leg-ring" style={{ borderColor: '#eab308', borderStyle: 'dashed' }} /> No Contact (Safe)</div>
+          <div className="leg-pipe" />
+          <div className="leg-item"><div className="leg-ring" style={{ borderColor: '#ef4444', borderStyle: 'dashed' }} /> No Contact (Flood Risk)</div>
+          <div className="leg-pipe" />
           <div className="leg-item"><div className="leg-dot" style={{ background: '#ef4444' }} /> Red Alert</div>
           <div className="leg-pipe" />
           <div className="leg-item"><div className="leg-dot" style={{ background: '#10b981' }} /> Operational</div>
@@ -702,8 +727,6 @@ export default function App() {
           <div className="leg-item"><div className="leg-dot" style={{ background: '#ef4444' }} /> Blocked</div>
           <div className="leg-pipe" />
           <div className="leg-item"><div className="leg-ring" style={{ borderColor: '#f59e0b' }} /> Stale Zone</div>
-          <div className="leg-pipe" />
-          <div className="leg-item"><div className="leg-ring" style={{ borderColor: '#ef4444' }} /> Conflict</div>
           <div className="leg-pipe" />
           <div className="leg-item"><div className="leg-box" style={{ background: '#38bdf8' }} /> Flood Risk</div>
         </div>

@@ -19,7 +19,14 @@
       "name": "Yamuna River Basin",
       "type": "RIVER",
       "location": { "lat": 28.6100, "lng": 77.2300 },
-      "risk_radius_meters": 1600
+      "risk_radius_meters": 1600,
+      "path_coordinates": [
+        [28.7200, 77.2200],
+        [28.6700, 77.2300],
+        [28.6200, 77.2400],
+        [28.5700, 77.2600],
+        [28.5200, 77.2900]
+      ]
     }
   ],
   "infrastructure": [

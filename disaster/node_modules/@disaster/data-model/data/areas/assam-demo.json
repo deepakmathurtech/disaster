@@ -360,5 +360,48 @@
       "affected_population": "62,000+",
       "evacuation_status": "Evacuation in Progress"
     }
+  ],
+
+  "no_contact_zones": [
+    {
+      "id": "nc-sivasagar",
+      "name": "SIVASAGAR",
+      "district": "Sivasagar",
+      "location": { "lat": 26.988447, "lng": 94.621148 },
+      "radius_meters": 4500,
+      "description": "Critical communication outage in Sivasagar sector."
+    },
+    {
+      "id": "nc-gaurisagar",
+      "name": "GAURISAGAR",
+      "district": "Sivasagar",
+      "location": { "lat": 26.949460, "lng": 94.535980 },
+      "radius_meters": 4000,
+      "description": "Zero cellular signal reported across Gaurisagar sector."
+    },
+    {
+      "id": "nc-nepalikhuti",
+      "name": "NEPALIKHUTI",
+      "district": "Sivasagar / Dibrugarh Belt",
+      "location": { "lat": 27.000000, "lng": 94.500000 },
+      "radius_meters": 4000,
+      "description": "Remote riverbank settlement with total comms blackout."
+    },
+    {
+      "id": "nc-sonari",
+      "name": "SONARI / CHARAIDEO",
+      "district": "Charaideo",
+      "location": { "lat": 27.026694, "lng": 95.021367 },
+      "radius_meters": 4500,
+      "description": "Highland district outpost offline."
+    },
+    {
+      "id": "nc-jorhat",
+      "name": "JORHAT",
+      "district": "Jorhat",
+      "location": { "lat": 26.750000, "lng": 94.200000 },
+      "radius_meters": 4500,
+      "description": "Jorhat outer zone telecommunication tower failure."
+    }
   ]
 }

@@ -29,7 +29,40 @@
         "lat": 26.1827,
         "lng": 91.7450
       },
-      "risk_radius_meters": 3500
+      "risk_radius_meters": 6500,
+      "path_coordinates": [
+        [27.8500, 95.7000],
+        [27.6800, 95.3800],
+        [27.5200, 94.9500],
+        [27.2500, 94.6200],
+        [26.9800, 94.2400],
+        [26.8900, 93.7600],
+        [26.6500, 92.8200],
+        [26.5000, 92.4200],
+        [26.2800, 92.0500],
+        [26.1950, 91.7500],
+        [26.1300, 91.3000],
+        [26.1800, 90.6300],
+        [26.0600, 90.2200],
+        [25.9900, 89.9800]
+      ],
+      "flood_zones": [
+        {
+          "name": "Guwahati Brahmaputra Flood Surge Zone",
+          "location": { "lat": 26.1827, "lng": 91.7450 },
+          "radius_meters": 6500
+        },
+        {
+          "name": "Tezpur / Silghat Inundation Sector",
+          "location": { "lat": 26.6200, "lng": 92.8000 },
+          "radius_meters": 5800
+        },
+        {
+          "name": "Dibrugarh Riverfront Surge Basin",
+          "location": { "lat": 27.4800, "lng": 94.9200 },
+          "radius_meters": 6200
+        }
+      ]
     },
     {
       "id": "water-dhansiri",
@@ -39,7 +72,22 @@
         "lat": 26.4700,
         "lng": 93.9500
       },
-      "risk_radius_meters": 2800
+      "risk_radius_meters": 5200,
+      "path_coordinates": [
+        [25.8600, 93.7200],
+        [26.0500, 93.7800],
+        [26.2800, 93.8800],
+        [26.5200, 93.9700],
+        [26.6500, 93.7600],
+        [26.7400, 93.6500]
+      ],
+      "flood_zones": [
+        {
+          "name": "Golaghat & Numaligarh Dhansiri Surge Zone",
+          "location": { "lat": 26.5200, "lng": 93.9500 },
+          "radius_meters": 5200
+        }
+      ]
     },
     {
       "id": "water-kushiyara",
@@ -49,7 +97,21 @@
         "lat": 24.9000,
         "lng": 92.4500
       },
-      "risk_radius_meters": 2500
+      "risk_radius_meters": 4800,
+      "path_coordinates": [
+        [24.8900, 92.7200],
+        [24.8700, 92.5400],
+        [24.8600, 92.3500],
+        [24.8800, 92.2000],
+        [24.8100, 92.0500]
+      ],
+      "flood_zones": [
+        {
+          "name": "Karimganj / Barak Kushiyara Flood Zone",
+          "location": { "lat": 24.8700, "lng": 92.4500 },
+          "radius_meters": 4800
+        }
+      ]
     }
   ],
 
@@ -264,8 +326,8 @@
       "id": "unit-assam-01",
       "callsign": "Guwahati EOC Unit 01",
       "location": {
-        "lat": 26.1445,
-        "lng": 91.7362
+        "lat": 26.1100,
+        "lng": 91.7800
       },
       "status": "ACTIVE"
     },
@@ -359,6 +421,49 @@
       "impact_description": "Kopili river torrential surge. Low-lying habitations cut off from power grid.",
       "affected_population": "62,000+",
       "evacuation_status": "Evacuation in Progress"
+    }
+  ],
+
+  "no_contact_zones": [
+    {
+      "id": "nc-sivasagar",
+      "name": "SIVASAGAR",
+      "district": "Sivasagar",
+      "location": { "lat": 26.988447, "lng": 94.621148 },
+      "radius_meters": 4500,
+      "description": "Critical communication outage in Sivasagar sector."
+    },
+    {
+      "id": "nc-gaurisagar",
+      "name": "GAURISAGAR",
+      "district": "Sivasagar",
+      "location": { "lat": 26.949460, "lng": 94.535980 },
+      "radius_meters": 4000,
+      "description": "Zero cellular signal reported across Gaurisagar sector."
+    },
+    {
+      "id": "nc-nepalikhuti",
+      "name": "NEPALIKHUTI",
+      "district": "Sivasagar / Dibrugarh Belt",
+      "location": { "lat": 27.000000, "lng": 94.500000 },
+      "radius_meters": 4000,
+      "description": "Remote riverbank settlement with total comms blackout."
+    },
+    {
+      "id": "nc-sonari",
+      "name": "SONARI / CHARAIDEO",
+      "district": "Charaideo",
+      "location": { "lat": 27.026694, "lng": 95.021367 },
+      "radius_meters": 4500,
+      "description": "Highland district outpost offline."
+    },
+    {
+      "id": "nc-jorhat",
+      "name": "JORHAT",
+      "district": "Jorhat",
+      "location": { "lat": 26.750000, "lng": 94.200000 },
+      "radius_meters": 4500,
+      "description": "Jorhat outer zone telecommunication tower failure."
     }
   ]
 }
